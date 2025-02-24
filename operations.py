@@ -6,7 +6,7 @@ from email_validator import (
     EmailNotValidError,
     validate_email,
 )
-
+from models import Role
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -15,13 +15,15 @@ def add_user(
     session: Session,
     username: str,
     password: str,
-    email: str
+    email: str,
+    role: Role = Role.basic,
 ) -> User | None:
     hashed_password = pwd_context.hash(password)
     db_user = User(
         username=username,
         email=email,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        role=role,
     )
     session.add(db_user)
     try:
